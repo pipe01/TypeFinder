@@ -72,4 +72,33 @@ namespace TypeFinder
 
         public bool Complies(Type type) => type.Namespace == Namespace;
     }
+
+    internal sealed class ParameterlessCtorRule : IRule
+    {
+        public bool Complies(Type type) => type.GetConstructor(Type.EmptyTypes) != null;
+    }
+
+    internal sealed class GenericSubclassRule : IRule
+    {
+        private readonly Type GenericType;
+
+        public GenericSubclassRule(Type genericType)
+        {
+            this.GenericType = genericType ?? throw new ArgumentNullException(nameof(genericType));
+        }
+
+        public bool Complies(Type type)
+        {
+            while (type != null && type != typeof(object))
+            {
+                var cur = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
+                if (GenericType == cur)
+                    return true;
+
+                type = type.BaseType;
+            }
+
+            return false;
+        }
+    }
 }
