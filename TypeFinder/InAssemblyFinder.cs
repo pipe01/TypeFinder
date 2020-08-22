@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TypeFinder
 {
@@ -56,6 +53,18 @@ namespace TypeFinder
         /// </summary>
         /// <param name="ns">The namespace that types must have.</param>
         IInAssemblyFinder InNamespace(string ns);
+
+        /// <summary>
+        /// Filters types that have the <paramref name="attrType"/> attribute.
+        /// </summary>
+        /// <param name="attrType">The attribute that types must define.</param>
+        IInAssemblyFinder WithAttribute(Type attrType);
+
+        /// <summary>
+        /// Filters types that have the <typeparamref name="T"/> attribute.
+        /// </summary>
+        /// <typeparam name="T">The attribute that types must define.</typeparam>
+        IInAssemblyFinder WithAttribute<T>() where T : Attribute;
     }
 
     internal class InAssemblyFinder : IInAssemblyFinder
@@ -84,28 +93,25 @@ namespace TypeFinder
             return this;
         }
 
-        /// <inheritdoc/>
         public IInAssemblyFinder Excluding(params Type[] types) => WithRule(new ExcludeTypesRule(types));
 
-        /// <inheritdoc/>
         public IInAssemblyFinder ThatInherit(Type type) => WithRule(new InheritanceRule(type));
-        
-        /// <inheritdoc/>
+
         public IInAssemblyFinder ThatInherit<T>() => ThatInherit(typeof(T));
 
         public IInAssemblyFinder ThatInheritGenericType(Type genericType) => WithRule(new GenericSubclassRule(genericType));
-        
-        /// <inheritdoc/>
+
         public IInAssemblyFinder WhoseNameMatches(string regex) => WithRule(new NameRegexRule(regex, false));
 
-        /// <inheritdoc/>
         public IInAssemblyFinder WhoseFullNameMatches(string regex) => WithRule(new NameRegexRule(regex, true));
 
-        /// <inheritdoc/>
         public IInAssemblyFinder InNamespace(string ns) => WithRule(new InNamespaceRule(ns));
 
-        /// <inheritdoc/>
         public IInAssemblyFinder WithParameterlessConstructor => WithRule(new ParameterlessCtorRule());
+
+        public IInAssemblyFinder WithAttribute(Type attrType) => WithRule(new HasAttributeRule(attrType));
+
+        public IInAssemblyFinder WithAttribute<T>() where T : Attribute => WithAttribute(typeof(T));
 
         IEnumerator<Type> IEnumerable<Type>.GetEnumerator()
         {

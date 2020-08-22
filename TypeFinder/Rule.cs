@@ -101,4 +101,16 @@ namespace TypeFinder
             return false;
         }
     }
+
+    internal sealed class HasAttributeRule : IRule
+    {
+        private readonly Type AttributeType;
+
+        public HasAttributeRule(Type attributeType)
+        {
+            this.AttributeType = attributeType;
+        }
+
+        public bool Complies(Type type) => type.IsDefined(AttributeType, true);
+    }
 }
