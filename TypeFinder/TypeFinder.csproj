@@ -6,6 +6,28 @@
     <LangVersion>latest</LangVersion>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <PackageProjectUrl>https://github.com/pipe01/TypeFinder</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/pipe01/TypeFinder</RepositoryUrl>
+
+    <Authors>pipe01</Authors>
+
+    <Company>pipe01</Company>
+
+    <Description>Library for locating types that match a set of rules. Useful for DI containers.</Description>
+
+    <PackageTags>reflection,di,dependency-injection,finder</PackageTags>
+
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+
+    <FileVersion>1.0.1.0</FileVersion>
+
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
